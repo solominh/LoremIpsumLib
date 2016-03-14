@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 /**
  * Created by hoangminh on 1/5/16.
  */
-public class SettingUtils {
+public class BaseSetting {
 
     protected static final String SETTINGS_KEY_NAME = "SETTINGS_KEY_NAME";
     protected static String mSettingKeyName;
