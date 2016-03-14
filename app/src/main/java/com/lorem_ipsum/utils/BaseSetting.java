@@ -6,13 +6,18 @@ import android.content.SharedPreferences;
 /**
  * Created by hoangminh on 1/5/16.
  */
-public class BaseSetting {
+public abstract class BaseSetting {
 
-    protected static final String SETTINGS_KEY_NAME = "SETTINGS_KEY_NAME";
-    protected static String mSettingKeyName;
-    protected static String mAndroidId;
+    protected String mSettingKeyName;
+    protected String mAndroidId;
 
-    protected static SharedPreferences getSharedPreferences() {
+    //-----------------------------------------------------------------------------
+    // Hash key - hoangminh - 5:22 PM - 2/1/16
+    //-----------------------------------------------------------------------------
+
+    protected abstract String getSettingKeyName();
+
+    protected SharedPreferences getSharedPreferences() {
         Context context = AppUtils.getAppContext();
         if (context == null)
             return null;
@@ -20,11 +25,7 @@ public class BaseSetting {
         return context.getSharedPreferences(getSettingMainKeyName(), Context.MODE_PRIVATE);
     }
 
-    //-----------------------------------------------------------------------------
-    // Hash key - hoangminh - 5:22 PM - 2/1/16
-    //-----------------------------------------------------------------------------
-
-    public static String getSettingMainKeyName() {
+    public String getSettingMainKeyName() {
         if (mSettingKeyName != null)
             return mSettingKeyName;
 
@@ -35,7 +36,7 @@ public class BaseSetting {
         }
 
         // Build key
-        final String key = SETTINGS_KEY_NAME;
+        final String key = getSettingKeyName();
         mSettingKeyName = new StringBuilder(key + mAndroidId + key + mAndroidId + key + mAndroidId).reverse().toString();
 
         // Hash key
@@ -46,7 +47,7 @@ public class BaseSetting {
         return mSettingKeyName;
     }
 
-    public static String getSettingNormalKey(final String key) {
+    public String getSettingNormalKey(final String key) {
         // Get android ID
         if (mAndroidId == null) {
             final Context context = AppUtils.getAppContext();
@@ -68,7 +69,7 @@ public class BaseSetting {
     // Cache Integer
     //------------------------------------------------------------------------------------------------------------------------
 
-    public static void setInt(String key, int value) {
+    public void setInt(String key, int value) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return;
@@ -80,7 +81,7 @@ public class BaseSetting {
         editor.apply();
     }
 
-    public static int getInt(String key, int defaultValue) {
+    public int getInt(String key, int defaultValue) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return defaultValue;
@@ -92,7 +93,7 @@ public class BaseSetting {
     // Cache long
     //------------------------------------------------------------------------------------------------------------------------
 
-    public static void setLong(String key, long value) {
+    public void setLong(String key, long value) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return;
@@ -104,7 +105,7 @@ public class BaseSetting {
         editor.apply();
     }
 
-    public static long getLong(String key, int defaultValue) {
+    public long getLong(String key, int defaultValue) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return defaultValue;
@@ -116,7 +117,7 @@ public class BaseSetting {
     // Cache String
     //------------------------------------------------------------------------------------------------------------------------
 
-    public static void setString(String key, String value) {
+    public void setString(String key, String value) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return;
@@ -128,7 +129,7 @@ public class BaseSetting {
         editor.apply();
     }
 
-    public static String getString(String key, String defaultValue) {
+    public String getString(String key, String defaultValue) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return defaultValue;
@@ -140,7 +141,7 @@ public class BaseSetting {
     // Cache Float
     //------------------------------------------------------------------------------------------------------------------------
 
-    public static void setFloat(String key, float value) {
+    public void setFloat(String key, float value) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return;
@@ -152,7 +153,7 @@ public class BaseSetting {
         editor.apply();
     }
 
-    public static float getFloat(String key, float defaultValue) {
+    public float getFloat(String key, float defaultValue) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return defaultValue;
@@ -164,7 +165,7 @@ public class BaseSetting {
     // Cache Boolean
     //------------------------------------------------------------------------------------------------------------------------
 
-    public static void setBool(String key, boolean value) {
+    public void setBool(String key, boolean value) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return;
@@ -176,7 +177,7 @@ public class BaseSetting {
         editor.apply();
     }
 
-    public static boolean getBool(String key, boolean defaultValue) {
+    public boolean getBool(String key, boolean defaultValue) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return defaultValue;
