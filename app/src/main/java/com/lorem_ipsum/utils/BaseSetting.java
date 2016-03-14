@@ -161,7 +161,7 @@ public abstract class BaseSetting {
         return sharedPreferences.getString(getSettingNormalKey(key), defaultValue);
     }
 
-    public void removeSting(String key) {
+    public void removeString(String key) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return;
