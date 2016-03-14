@@ -89,6 +89,18 @@ public abstract class BaseSetting {
         return sharedPreferences.getInt(getSettingNormalKey(key), defaultValue);
     }
 
+    public void removeInt(String key) {
+        SharedPreferences sharedPreferences = getSharedPreferences();
+        if (sharedPreferences == null)
+            return;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (editor == null)
+            return;
+
+        editor.remove(getSettingNormalKey(key));
+        editor.apply();
+    }
+
     //------------------------------------------------------------------------------------------------------------------------
     // Cache long
     //------------------------------------------------------------------------------------------------------------------------
@@ -111,6 +123,18 @@ public abstract class BaseSetting {
             return defaultValue;
 
         return sharedPreferences.getLong(getSettingNormalKey(key), defaultValue);
+    }
+
+    public void removeLong(String key) {
+        SharedPreferences sharedPreferences = getSharedPreferences();
+        if (sharedPreferences == null)
+            return;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (editor == null)
+            return;
+
+        editor.remove(getSettingNormalKey(key));
+        editor.apply();
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -137,6 +161,18 @@ public abstract class BaseSetting {
         return sharedPreferences.getString(getSettingNormalKey(key), defaultValue);
     }
 
+    public void removeSting(String key) {
+        SharedPreferences sharedPreferences = getSharedPreferences();
+        if (sharedPreferences == null)
+            return;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (editor == null)
+            return;
+
+        editor.remove(getSettingNormalKey(key));
+        editor.apply();
+    }
+
     //------------------------------------------------------------------------------------------------------------------------
     // Cache Float
     //------------------------------------------------------------------------------------------------------------------------
@@ -161,6 +197,18 @@ public abstract class BaseSetting {
         return sharedPreferences.getFloat(getSettingNormalKey(key), defaultValue);
     }
 
+    public void removeFloat(String key) {
+        SharedPreferences sharedPreferences = getSharedPreferences();
+        if (sharedPreferences == null)
+            return;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (editor == null)
+            return;
+
+        editor.remove(getSettingNormalKey(key));
+        editor.apply();
+    }
+
     //------------------------------------------------------------------------------------------------------------------------
     // Cache Boolean
     //------------------------------------------------------------------------------------------------------------------------
@@ -183,6 +231,18 @@ public abstract class BaseSetting {
             return defaultValue;
 
         return sharedPreferences.getBoolean(getSettingNormalKey(key), defaultValue);
+    }
+
+    public void removeBool(String key) {
+        SharedPreferences sharedPreferences = getSharedPreferences();
+        if (sharedPreferences == null)
+            return;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (editor == null)
+            return;
+
+        editor.remove(getSettingNormalKey(key));
+        editor.apply();
     }
 
 }
