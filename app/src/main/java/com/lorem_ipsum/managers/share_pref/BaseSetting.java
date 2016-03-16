@@ -1,21 +1,14 @@
-package com.lorem_ipsum.utils;
+package com.lorem_ipsum.managers.share_pref;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.lorem_ipsum.utils.AppUtils;
 
 /**
  * Created by hoangminh on 1/5/16.
  */
 public abstract class BaseSetting {
-
-    protected String mSettingKeyName;
-    protected String mAndroidId;
-
-    //-----------------------------------------------------------------------------
-    // Hash key - hoangminh - 5:22 PM - 2/1/16
-    //-----------------------------------------------------------------------------
-
-    protected abstract String getSettingKeyName();
 
     protected SharedPreferences getSharedPreferences() {
         Context context = AppUtils.getAppContext();
@@ -25,45 +18,9 @@ public abstract class BaseSetting {
         return context.getSharedPreferences(getSettingMainKeyName(), Context.MODE_PRIVATE);
     }
 
-    public String getSettingMainKeyName() {
-        if (mSettingKeyName != null)
-            return mSettingKeyName;
+    protected abstract String getSettingMainKeyName();
 
-        // Get android ID
-        if (mAndroidId == null) {
-            final Context context = AppUtils.getAppContext();
-            mAndroidId = DeviceUtils.getDeviceUUID(context);
-        }
-
-        // Build key
-        final String key = getSettingKeyName();
-        mSettingKeyName = new StringBuilder(key + mAndroidId + key + mAndroidId + key + mAndroidId).reverse().toString();
-
-        // Hash key
-        final String hashedKey = StringUtils.md5Hash(mSettingKeyName);
-        if (hashedKey != null)
-            mSettingKeyName = hashedKey;
-
-        return mSettingKeyName;
-    }
-
-    public String getSettingNormalKey(final String key) {
-        // Get android ID
-        if (mAndroidId == null) {
-            final Context context = AppUtils.getAppContext();
-            mAndroidId = DeviceUtils.getDeviceUUID(context);
-        }
-
-        // Build key
-        final String tempKey = new StringBuilder(key + mAndroidId).reverse().toString();
-
-        // Hash key
-        String hashedKey = StringUtils.md5Hash(tempKey);
-        if (hashedKey == null)
-            hashedKey = tempKey;
-
-        return hashedKey;
-    }
+    protected abstract String getSettingNormalKey(final String key);
 
     //------------------------------------------------------------------------------------------------------------------------
     // Cache Integer
@@ -89,17 +46,6 @@ public abstract class BaseSetting {
         return sharedPreferences.getInt(getSettingNormalKey(key), defaultValue);
     }
 
-    public void removeInt(String key) {
-        SharedPreferences sharedPreferences = getSharedPreferences();
-        if (sharedPreferences == null)
-            return;
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (editor == null)
-            return;
-
-        editor.remove(getSettingNormalKey(key));
-        editor.apply();
-    }
 
     //------------------------------------------------------------------------------------------------------------------------
     // Cache long
@@ -123,18 +69,6 @@ public abstract class BaseSetting {
             return defaultValue;
 
         return sharedPreferences.getLong(getSettingNormalKey(key), defaultValue);
-    }
-
-    public void removeLong(String key) {
-        SharedPreferences sharedPreferences = getSharedPreferences();
-        if (sharedPreferences == null)
-            return;
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (editor == null)
-            return;
-
-        editor.remove(getSettingNormalKey(key));
-        editor.apply();
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -161,17 +95,6 @@ public abstract class BaseSetting {
         return sharedPreferences.getString(getSettingNormalKey(key), defaultValue);
     }
 
-    public void removeString(String key) {
-        SharedPreferences sharedPreferences = getSharedPreferences();
-        if (sharedPreferences == null)
-            return;
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (editor == null)
-            return;
-
-        editor.remove(getSettingNormalKey(key));
-        editor.apply();
-    }
 
     //------------------------------------------------------------------------------------------------------------------------
     // Cache Float
@@ -195,18 +118,6 @@ public abstract class BaseSetting {
             return defaultValue;
 
         return sharedPreferences.getFloat(getSettingNormalKey(key), defaultValue);
-    }
-
-    public void removeFloat(String key) {
-        SharedPreferences sharedPreferences = getSharedPreferences();
-        if (sharedPreferences == null)
-            return;
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (editor == null)
-            return;
-
-        editor.remove(getSettingNormalKey(key));
-        editor.apply();
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -233,7 +144,11 @@ public abstract class BaseSetting {
         return sharedPreferences.getBoolean(getSettingNormalKey(key), defaultValue);
     }
 
-    public void removeBool(String key) {
+    //-----------------------------------------------------------------------------
+    // Remove - hoangminh - 1:32 PM - 3/16/16
+    //-----------------------------------------------------------------------------
+
+    public void remove(String key) {
         SharedPreferences sharedPreferences = getSharedPreferences();
         if (sharedPreferences == null)
             return;
