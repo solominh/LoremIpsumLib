@@ -160,4 +160,17 @@ public abstract class BaseSetting {
         editor.apply();
     }
 
+    public void clear() {
+        SharedPreferences sharedPreferences = getSharedPreferences();
+        if (sharedPreferences == null)
+            return;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (editor == null)
+            return;
+
+        editor.clear();
+        editor.apply();
+    }
+
+
 }
