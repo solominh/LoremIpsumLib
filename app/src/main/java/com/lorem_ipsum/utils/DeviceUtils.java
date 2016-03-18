@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 /**
  * Created by originally.us on 4/15/14.
@@ -37,12 +38,22 @@ public class DeviceUtils {
         }
     }
 
+    public static void hideKeyboard(Context context, EditText input) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+    }
+
     public static void showKeyboard(Activity activity) {
         View v = activity.getWindow().getCurrentFocus();
         if (v != null) {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
         }
+    }
+
+    public static void showKeyboard(Context context, EditText input) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
     }
 
     public static boolean isKeyboardVisible(Context context) {
