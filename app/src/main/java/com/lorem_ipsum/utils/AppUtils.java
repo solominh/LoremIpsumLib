@@ -28,7 +28,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -40,35 +39,35 @@ import java.util.Date;
  */
 public class AppUtils extends MultiDexApplication implements NetworkStateReceiver.NetworkStateReceiverListener {
 
-    private static SimpleDateFormat formatter = new SimpleDateFormat("E MMM d yyyy hh:mm a", java.util.Locale.getDefault());
-    private static final String TAG = "AppUtils";
+    private final static String TAG = AppUtils.class.getSimpleName();
 
+    // App
     private static AppUtils appInstance;
     private static Context appContext;
     private static boolean appState;
 
-    private static boolean networkState;
-    public static NetworkListener networkListener;
-    private NetworkStateReceiver networkStateReceiver;
-
-    public static AppUtils getInstance(){
-        return appInstance;
-    }
+    // Network state
+    private NetworkStateReceiver mNetworkStateReceiver;
+    public  NetworkListener mNetworkListener;
+    private boolean mNetworkState;
 
     public void onCreate() {
         MultiDex.install(getApplicationContext());
         super.onCreate();
         AppUtils.appInstance = this;
         AppUtils.appContext = getApplicationContext();
-        AppUtils.networkState = isOnline(appContext);
 
-        initialiseNetworkManagement();
+        initNetworkManagement();
 
         //Print out package name for debug purpose
         String packageName = "Package name: " + getAppPackageName();
         Log.i(TAG, packageName);
 
         ImageLoaderUtils.configImageLoader(appContext);
+    }
+
+    public static AppUtils getInstance() {
+        return appInstance;
     }
 
     public static Context getAppContext() {
@@ -109,7 +108,7 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
 
     /**
      * Initialise network management
-     * <p/>
+     * <p>
      * That's handle will be return network status for changed.
      * Note: you need register network listener in your activity
      */
@@ -119,30 +118,32 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
         void networkUnavailable();
     }
 
-    private void initialiseNetworkManagement() {
-        networkStateReceiver = new NetworkStateReceiver();
-        networkStateReceiver.addListener(this);
+    private void initNetworkManagement() {
+        mNetworkState = isOnline(appContext);
+        
+        mNetworkStateReceiver = new NetworkStateReceiver();
+        mNetworkStateReceiver.addListener(this);
         IntentFilter intentFilter = new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
-        this.registerReceiver(networkStateReceiver, intentFilter);
+        this.registerReceiver(mNetworkStateReceiver, intentFilter);
     }
 
-    public static boolean getNetworkState() {
-        return networkState;
+    public boolean getNetworkState() {
+        return mNetworkState;
     }
 
     @Override
     public void networkAvailable() {
-        networkState = true;
-        if (networkListener != null) {
-            networkListener.networkAvailable();
+        mNetworkState = true;
+        if (mNetworkListener != null) {
+            mNetworkListener.networkAvailable();
         }
     }
 
     @Override
     public void networkUnavailable() {
-        networkState = false;
-        if (networkListener != null) {
-            networkListener.networkUnavailable();
+        mNetworkState = false;
+        if (mNetworkListener != null) {
+            mNetworkListener.networkUnavailable();
         }
     }
 
@@ -183,19 +184,13 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
      */
     public static int getAppVersion() {
         Context context = getAppContext();
-
         try {
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            // should never happen
-            //throw new RuntimeException("Could not get package name: " + e);
-        } catch (Exception e) {
-            // should never happen
-            //throw new RuntimeException("Unknown expected exception in getAppVersion: " + e);
+            e.printStackTrace();
+            return -1;
         }
-
-        return -1;
     }
 
     /**
@@ -210,10 +205,9 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
 
     /**
      * Helper function to check if this app and device is able to make call
-     *
-     * @param context should be an Activity context
      */
-    public static boolean isTelephonyAvailable(Context context) {
+    public static boolean isTelephonyAvailable() {
+        Context context = getAppContext();
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
@@ -250,7 +244,7 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
         String messageUnknownError = "Unexpected error occurs";
 
         boolean hasPhone = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-        if (hasPhone == false) {
+        if (hasPhone) {
             ToastUtils.showErrorMessageWithSuperToast(messageNoTelephony, "AppUtils");
             return;
         }
@@ -328,39 +322,52 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
             return;
 
         boolean canWrite = AppUtils.canWriteExternalStorage();
-        if (canWrite == false)
+        if (!canWrite)
             return;
 
-        String storagePath = Environment.getExternalStorageDirectory().toString();
-        File logFile = new File(storagePath, "/application_logs.txt");
+        File storageDir = Environment.getExternalStorageDirectory();
+        File logFile = new File(storageDir, "/application_logs.txt");
 
         if (!logFile.exists()) {
+            boolean createFileSuccess = false;
             try {
-                logFile.createNewFile();
+                createFileSuccess = logFile.createNewFile();
             } catch (IOException e) {
-                logFile = null;
                 e.printStackTrace();
             }
-        }
-        if (logFile == null) {
-            LogUtils.e(TAG, "Failed to create log file");
-            return;
+
+            if (!createFileSuccess) {
+                LogUtils.e(TAG, "Failed to create log file");
+                return;
+            }
         }
 
+        BufferedWriter buf = null;
         try {
             //User BufferedWriter for good performance, 'true' to set append to file flag
-            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf = new BufferedWriter(new FileWriter(logFile, true));
 
-            buf.append(formatter.format(new Date()));
-            if (tag != null && !tag.isEmpty())
+            // Date
+            buf.append(DateTimeUtils.formatLogDate(new Date()));
+            // Tag
+            if (StringUtils.isNotNull(tag))
                 buf.append(tag).append(": ");
-            if (!text.isEmpty())
-                buf.append(text);
-
+            // Text
+            buf.append(text);
+            // Line
             buf.newLine();
-            buf.close();
+
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (buf != null) {
+                try {
+                    buf.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
     }
 
@@ -382,8 +389,6 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
      */
     protected void clearDataOnUpgrade(String currentVersionName) {
         Context context = getAppContext();
-        if (context == null)
-            return;
         SharedPreferences sharedPreferences = context.getSharedPreferences("AppUtils", Context.MODE_PRIVATE);
         if (sharedPreferences == null)
             return;
@@ -403,7 +408,7 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
             return;
 
         editor.putLong(key, System.currentTimeMillis());
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -414,35 +419,19 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
             return ((ActivityManager) AppUtils.getAppContext().getSystemService(Context.ACTIVITY_SERVICE)).clearApplicationUserData();
         }
 
-        if (appInstance == null)
-            return false;
-
         File cache = appInstance.getCacheDir();
         File appDir = new File(cache.getParent());
-        if(appDir.exists()){
+        if (appDir.exists()) {
             String[] children = appDir.list();
-            for(String s : children){
-                if(!s.equals("lib")){
-                    deleteDir(new File(appDir, s));
-                    Log.i("TAG", "File /data/data/APP_PACKAGE/" + s +" DELETED");
+            for (String s : children) {
+                if (!s.equals("lib")) {
+                    FileUtils.deleteDir(new File(appDir, s));
+                    Log.i("TAG", "File /data/data/APP_PACKAGE/" + s + " DELETED");
                 }
             }
         }
         return true;
     }
 
-    public static boolean deleteDir(File dir) {
-        if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-
-        return dir.delete();
-    }
 
 }
