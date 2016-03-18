@@ -304,10 +304,7 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
             LogUtils.e("Name not found", e1.toString());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
         return hashString;
     }
 
