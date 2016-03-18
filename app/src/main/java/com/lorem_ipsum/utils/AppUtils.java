@@ -151,7 +151,7 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
         }
     }
 
-    protected static boolean checkInternetAvailable() {
+    public static boolean checkInternetAvailable() {
         // Ping
         Runtime runtime = Runtime.getRuntime();
         try {
