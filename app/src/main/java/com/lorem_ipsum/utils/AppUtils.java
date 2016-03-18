@@ -48,7 +48,7 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
 
     // Network state
     private NetworkStateReceiver mNetworkStateReceiver;
-    public  NetworkListener mNetworkListener;
+    private NetworkListener mNetworkListener;
     private boolean mNetworkState;
 
     public void onCreate() {
@@ -118,9 +118,13 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
         void networkUnavailable();
     }
 
+    public void setNetworkListener(NetworkListener networkListener) {
+        mNetworkListener = networkListener;
+    }
+
     private void initNetworkManagement() {
         mNetworkState = isOnline(appContext);
-        
+
         mNetworkStateReceiver = new NetworkStateReceiver();
         mNetworkStateReceiver.addListener(this);
         IntentFilter intentFilter = new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
