@@ -206,7 +206,7 @@ public class FileUtils {
     //-----------------------------------------------------------------------------
 
     // Delete everything: files + folders
-    public static boolean deleteFolder(File fileOrDirectory) {
+    public static boolean deleteDir(File fileOrDirectory) {
         // Sanity check
         if (fileOrDirectory == null || !fileOrDirectory.exists())
             return false;
@@ -215,7 +215,7 @@ public class FileUtils {
         if (fileOrDirectory.isDirectory()) {
             File[] listFiles = fileOrDirectory.listFiles();
             for (File child : listFiles)
-                deleteFolder(child);
+                deleteDir(child);
         }
 
         // Delete fileOrFolder
@@ -223,7 +223,7 @@ public class FileUtils {
     }
 
     // Only delete direct children files
-    public static boolean deleteFilesInsideFolder(File fileOrDirectory) {
+    public static boolean deleteFilesInsideDir(File fileOrDirectory) {
         // Sanity check
         if (fileOrDirectory == null || !fileOrDirectory.exists())
             return false;
