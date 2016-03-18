@@ -14,7 +14,15 @@ import java.util.TimeZone;
  */
 public final class DateTimeUtils {
 
-	private static SimpleDateFormat fullDateFormatter, halfDateFormatter;
+    private static SimpleDateFormat fullDateFormatter, halfDateFormatter;
+    private static SimpleDateFormat logFormatter;
+
+    public static String formatLogDate(Date date) {
+        if (logFormatter == null)
+            logFormatter = new SimpleDateFormat("E MMM d yyyy hh:mm a", java.util.Locale.getDefault());
+
+        return logFormatter.format(date);
+    }
 
     public static String formatDateTimeWithZone(Date date) {
         if (date == null)
@@ -54,8 +62,7 @@ public final class DateTimeUtils {
         try {
             formatter = new SimpleDateFormat(format);
             formatter.setTimeZone(TimeZone.getTimeZone("Asia/Singapore"));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             formatter = null;
         }
         if (formatter == null)
@@ -71,87 +78,90 @@ public final class DateTimeUtils {
             return "th";
         }
         switch (n % 10) {
-            case 1:  return "st";
-            case 2:  return "nd";
-            case 3:  return "rd";
-            default: return "th";
+            case 1:
+                return "st";
+            case 2:
+                return "nd";
+            case 3:
+                return "rd";
+            default:
+                return "th";
         }
     }
 
-	public static String formatRemainingDateTime(long inputDate) {
-		long distanceMili = inputDate - System.currentTimeMillis();
-		if ( distanceMili <= 0) {
-			return null;
-		}
+    public static String formatRemainingDateTime(long inputDate) {
+        long distanceMili = inputDate - System.currentTimeMillis();
+        if (distanceMili <= 0) {
+            return null;
+        }
 
-		StringBuilder builder = new StringBuilder();
-		if (distanceMili >= Constants.TIME_ONE_YEAR) {
-			int years = (int) (distanceMili / Constants.TIME_ONE_YEAR);
-			builder.append(years);
-			if (years == 1) {
-				builder.append(" year");
-			} else {
-				builder.append(" years");
-			}
+        StringBuilder builder = new StringBuilder();
+        if (distanceMili >= Constants.TIME_ONE_YEAR) {
+            int years = (int) (distanceMili / Constants.TIME_ONE_YEAR);
+            builder.append(years);
+            if (years == 1) {
+                builder.append(" year");
+            } else {
+                builder.append(" years");
+            }
 
-		} else if (distanceMili >= Constants.TIME_ONE_MONTH) {
-			int months = (int) (distanceMili / Constants.TIME_ONE_MONTH);
-			builder.append(months);
-			if (months == 1) {
-				builder.append(" month");
-			} else {
-				builder.append(" months");
-			}
+        } else if (distanceMili >= Constants.TIME_ONE_MONTH) {
+            int months = (int) (distanceMili / Constants.TIME_ONE_MONTH);
+            builder.append(months);
+            if (months == 1) {
+                builder.append(" month");
+            } else {
+                builder.append(" months");
+            }
 
-		} else if (distanceMili >= Constants.TIME_ONE_WEEK) {
-			int weeks = (int) (distanceMili / Constants.TIME_ONE_WEEK);
-			builder.append(weeks);
-			if (weeks == 1) {
-				builder.append(" week");
-			} else {
-				builder.append(" weeks");
-			}
+        } else if (distanceMili >= Constants.TIME_ONE_WEEK) {
+            int weeks = (int) (distanceMili / Constants.TIME_ONE_WEEK);
+            builder.append(weeks);
+            if (weeks == 1) {
+                builder.append(" week");
+            } else {
+                builder.append(" weeks");
+            }
 
-		} else if (distanceMili >= Constants.TIME_ONE_DAY) {
-			int days = (int) (distanceMili / Constants.TIME_ONE_DAY);
-			builder.append(days);
-			if (days == 1) {
-				builder.append(" day");
-			} else {
-				builder.append(" days");
-			}
+        } else if (distanceMili >= Constants.TIME_ONE_DAY) {
+            int days = (int) (distanceMili / Constants.TIME_ONE_DAY);
+            builder.append(days);
+            if (days == 1) {
+                builder.append(" day");
+            } else {
+                builder.append(" days");
+            }
 
-		} else if (distanceMili >= Constants.TIME_ONE_HOUR) {
-			int hours = (int) (distanceMili / Constants.TIME_ONE_HOUR);
-			builder.append(hours);
-			if (hours == 1) {
-				builder.append(" hour");
-			} else {
-				builder.append(" hours");
-			}
+        } else if (distanceMili >= Constants.TIME_ONE_HOUR) {
+            int hours = (int) (distanceMili / Constants.TIME_ONE_HOUR);
+            builder.append(hours);
+            if (hours == 1) {
+                builder.append(" hour");
+            } else {
+                builder.append(" hours");
+            }
 
-		} else if (distanceMili >= Constants.TIME_ONE_MINUTE) {
-			int minutes = (int) (distanceMili / Constants.TIME_ONE_MINUTE);
-			builder.append(minutes);
-			if (minutes == 1) {
-				builder.append(" minute");
-			} else {
-				builder.append(" minutes");
-			}
+        } else if (distanceMili >= Constants.TIME_ONE_MINUTE) {
+            int minutes = (int) (distanceMili / Constants.TIME_ONE_MINUTE);
+            builder.append(minutes);
+            if (minutes == 1) {
+                builder.append(" minute");
+            } else {
+                builder.append(" minutes");
+            }
 
-		} else {
-			builder.append("1 minute");
-		}
+        } else {
+            builder.append("1 minute");
+        }
 
-		builder.append(".");
-		return builder.toString();
-	}
+        builder.append(".");
+        return builder.toString();
+    }
 
     /**
      * Return positive if in the future, negative if in the past
      */
-    public static float daysFromNow(Date date)
-    {
+    public static float daysFromNow(Date date) {
         if (date == null)
             return 0;
         return (date.getTime() - (new Date()).getTime()) / 24.0f / 60.0f / 60.0f / 1000.0f;
@@ -160,8 +170,7 @@ public final class DateTimeUtils {
     /**
      * Return positive if in the future, negative if in the past
      */
-    public static float hoursFromNow(Date date)
-    {
+    public static float hoursFromNow(Date date) {
         if (date == null)
             return 0;
         return (date.getTime() - (new Date()).getTime()) / 60.0f / 60.0f / 1000.0f;
@@ -170,8 +179,7 @@ public final class DateTimeUtils {
     /**
      * Return positive if in the future, negative if in the past
      */
-    public static float minutesFromNow(Date date)
-    {
+    public static float minutesFromNow(Date date) {
         if (date == null)
             return 0;
         return (date.getTime() - (new Date()).getTime()) / 60.0f / 1000.0f;
@@ -180,8 +188,7 @@ public final class DateTimeUtils {
     /**
      * Return positive if in the future, negative if in the past
      */
-    public static float secondsFromNow(Date date)
-    {
+    public static float secondsFromNow(Date date) {
         if (date == null)
             return 0;
         return (date.getTime() - (new Date()).getTime()) / 1000.0f;
@@ -190,8 +197,7 @@ public final class DateTimeUtils {
     /**
      * Return positive if in the date contains zero time for the day (midnight)
      */
-    public static boolean isMidnight(Date date)
-    {
+    public static boolean isMidnight(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
@@ -375,7 +381,7 @@ public final class DateTimeUtils {
     }
 
     public static void CalendarEvetnAndroid(Activity activity, String prefill, Date datetime) {
-        if(activity == null)
+        if (activity == null)
             return;
 
         Calendar cal = Calendar.getInstance();
@@ -386,7 +392,7 @@ public final class DateTimeUtils {
         intent.putExtra("beginTime", cal.getTimeInMillis());
         intent.putExtra("allDay", true);
         intent.putExtra("rrule", "FREQ=YEARLY");
-        intent.putExtra("endTime", cal.getTimeInMillis()+60*60*1000);
+        intent.putExtra("endTime", cal.getTimeInMillis() + 60 * 60 * 1000);
         intent.putExtra("title", prefill);
         activity.startActivity(intent);
     }
