@@ -45,7 +45,7 @@ public class DeviceUtils {
         }
     }
 
-    public static boolean isKeyboardVisible(Activity context) {
+    public static boolean isKeyboardVisible(Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         return imm.isActive();
     }
