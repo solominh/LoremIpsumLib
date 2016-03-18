@@ -11,12 +11,12 @@ import java.util.List;
 
 public class NetworkStateReceiver extends BroadcastReceiver {
 
-    protected List<NetworkStateReceiverListener> listeners;
-    protected Boolean connected;
+    protected List<NetworkStateReceiverListener> mNetworkStateReceiverListeners;
+    protected Boolean mConnected;
 
     public NetworkStateReceiver() {
-        listeners = new ArrayList<NetworkStateReceiverListener>();
-        connected = null;
+        mNetworkStateReceiverListeners = new ArrayList<>();
+        mConnected = null;
     }
 
     @Override
@@ -25,39 +25,43 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             return;
 
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = manager.getActiveNetworkInfo();
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
-        if(ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
-            connected = true;
+        if(networkInfo != null && networkInfo.getState() == NetworkInfo.State.CONNECTED) {
+            mConnected = true;
         } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
-            connected = false;
+            mConnected = false;
         }
 
         notifyStateToAll();
     }
 
     private void notifyStateToAll() {
-        for(NetworkStateReceiverListener listener : listeners)
+        for(NetworkStateReceiverListener listener : mNetworkStateReceiverListeners)
             notifyState(listener);
     }
 
     private void notifyState(NetworkStateReceiverListener listener) {
-        if(connected == null || listener == null)
+        if(mConnected == null || listener == null)
             return;
 
-        if(connected == true)
+        if(mConnected)
             listener.networkAvailable();
         else
             listener.networkUnavailable();
     }
 
-    public void addListener(NetworkStateReceiverListener l) {
-        listeners.add(l);
-        notifyState(l);
+    //----------------------------------------------------------------------------------------------
+    // Interface
+    //----------------------------------------------------------------------------------------------
+
+    public void addListener(NetworkStateReceiverListener listener) {
+        mNetworkStateReceiverListeners.add(listener);
+        notifyState(listener);
     }
 
-    public void removeListener(NetworkStateReceiverListener l) {
-        listeners.remove(l);
+    public void removeListener(NetworkStateReceiverListener listener) {
+        mNetworkStateReceiverListeners.remove(listener);
     }
 
     public interface NetworkStateReceiverListener {
