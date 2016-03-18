@@ -151,6 +151,19 @@ public class AppUtils extends MultiDexApplication implements NetworkStateReceive
         }
     }
 
+    protected static boolean checkInternetAvailable() {
+        // Ping
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * Return the device uuid (integer)
      *
