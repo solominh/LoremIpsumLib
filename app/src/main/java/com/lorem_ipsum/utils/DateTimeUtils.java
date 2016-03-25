@@ -17,6 +17,34 @@ public final class DateTimeUtils {
     private static SimpleDateFormat fullDateFormatter, halfDateFormatter;
     private static SimpleDateFormat logFormatter;
 
+    //-----------------------------------------------------------------------------
+    // Get start and end of the day - hoangminh - 4:18 PM - 3/25/16
+    //-----------------------------------------------------------------------------
+
+    public Date getStartOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    public Date getEndOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTime();
+    }
+
+    //-----------------------------------------------------------------------------
+    // Format  - hoangminh - 4:18 PM - 3/25/16
+    //-----------------------------------------------------------------------------
+
     public static String formatLogDate(Date date) {
         if (logFormatter == null)
             logFormatter = new SimpleDateFormat("E MMM d yyyy hh:mm a", java.util.Locale.getDefault());
