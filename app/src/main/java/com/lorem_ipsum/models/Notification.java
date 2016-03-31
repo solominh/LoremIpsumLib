@@ -42,7 +42,7 @@ public class Notification implements Comparable<Notification> {
         if (theDate == null)
             return null;
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = ClockUtils.getCalendarInstance();
         cal.setTime(this.sent_datetime);
         int day = cal.get(Calendar.DAY_OF_MONTH);
 

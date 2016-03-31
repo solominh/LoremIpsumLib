@@ -22,7 +22,7 @@ public final class DateTimeUtils {
     //-----------------------------------------------------------------------------
 
     public Date getStartOfDay(Date date) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -32,7 +32,7 @@ public final class DateTimeUtils {
     }
 
     public Date getEndOfDay(Date date) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
@@ -226,7 +226,7 @@ public final class DateTimeUtils {
      * Return positive if in the date contains zero time for the day (midnight)
      */
     public static boolean isMidnight(Date date) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.setTime(date);
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
         int minutes = calendar.get(Calendar.MINUTE);
@@ -239,37 +239,37 @@ public final class DateTimeUtils {
      * Return new datetime object with given offset
      */
     public static Date dateWithYearOffset(int offset) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.add(Calendar.YEAR, offset);
         return calendar.getTime();
     }
 
     public static Date dateWithMonthOffset(int offset) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.add(Calendar.MONTH, offset);
         return calendar.getTime();
     }
 
     public static Date dateWithDayOffset(int offset) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.add(Calendar.DAY_OF_MONTH, offset);
         return calendar.getTime();
     }
 
     public static Date dateWithHourOffset(int offset) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.add(Calendar.HOUR, offset);
         return calendar.getTime();
     }
 
     public static Date dateWithMinuteOffset(int offset) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.add(Calendar.MINUTE, offset);
         return calendar.getTime();
     }
 
     public static Date dateWithSecondOffset(int offset) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.add(Calendar.SECOND, offset);
         return calendar.getTime();
     }
@@ -290,7 +290,7 @@ public final class DateTimeUtils {
         if (datetime == null || !isThisYear(datetime))
             return false;
 
-        int curWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+        int curWeek = ClockUtils.getCalendarInstance().get(Calendar.WEEK_OF_YEAR);
 
         Calendar calendar = new GregorianCalendar().getInstance();
         calendar.setTime(datetime);
@@ -306,7 +306,7 @@ public final class DateTimeUtils {
         if (datetime == null || !isThisYear(datetime))
             return false;
 
-        int curWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+        int curWeek = ClockUtils.getCalendarInstance().get(Calendar.WEEK_OF_YEAR);
 
         Calendar calendar = new GregorianCalendar().getInstance();
         calendar.setTime(datetime);
@@ -322,7 +322,7 @@ public final class DateTimeUtils {
         if (datetime == null || !isThisYear(datetime))
             return false;
 
-        int curWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+        int curWeek = ClockUtils.getCalendarInstance().get(Calendar.WEEK_OF_YEAR);
 
         Calendar calendar = new GregorianCalendar().getInstance();
         calendar.setTime(datetime);
@@ -338,7 +338,7 @@ public final class DateTimeUtils {
         if (datetime == null || !isThisYear(datetime))
             return false;
 
-        int curMonth = Calendar.getInstance().get(Calendar.MONTH);
+        int curMonth = ClockUtils.getCalendarInstance().get(Calendar.MONTH);
 
         Calendar calendar = new GregorianCalendar().getInstance();
         calendar.setTime(datetime);
@@ -354,7 +354,7 @@ public final class DateTimeUtils {
         if (datetime == null || !isThisYear(datetime))
             return false;
 
-        int curMonth = Calendar.getInstance().get(Calendar.MONTH);
+        int curMonth = ClockUtils.getCalendarInstance().get(Calendar.MONTH);
 
         Calendar calendar = new GregorianCalendar().getInstance();
         calendar.setTime(datetime);
@@ -370,7 +370,7 @@ public final class DateTimeUtils {
         if (datetime == null || !isThisYear(datetime))
             return false;
 
-        int curMonth = Calendar.getInstance().get(Calendar.MONTH);
+        int curMonth = ClockUtils.getCalendarInstance().get(Calendar.MONTH);
 
         Calendar calendar = new GregorianCalendar().getInstance();
         calendar.setTime(datetime);
@@ -383,7 +383,7 @@ public final class DateTimeUtils {
      * Check date time is this year
      */
     public static boolean isThisYear(Date datetime) {
-        int curYear = Calendar.getInstance().get(Calendar.YEAR);
+        int curYear = ClockUtils.getCalendarInstance().get(Calendar.YEAR);
 
         Calendar calendar = new GregorianCalendar().getInstance();
         calendar.setTime(datetime);
@@ -412,7 +412,7 @@ public final class DateTimeUtils {
         if (activity == null)
             return;
 
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = ClockUtils.getCalendarInstance();
         cal.setTime(datetime);
 
         Intent intent = new Intent(Intent.ACTION_EDIT);
@@ -426,7 +426,7 @@ public final class DateTimeUtils {
     }
 
     public static Date getDate(long milliSeconds) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = ClockUtils.getCalendarInstance();
         calendar.setTimeInMillis(milliSeconds);
 
         return calendar.getTime();

@@ -3,6 +3,7 @@ package com.lorem_ipsum.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -74,5 +75,15 @@ public class ClockUtils {
         if (context == null)
             context = AppUtils.getAppContext();
         return context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
+    //-----------------------------------------------------------------------------
+    // Calendar - hoangminh - 4:47 PM - 3/31/16
+    //-----------------------------------------------------------------------------
+
+    public static synchronized Calendar getCalendarInstance() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(currentTimeMillis());
+        return calendar;
     }
 }
