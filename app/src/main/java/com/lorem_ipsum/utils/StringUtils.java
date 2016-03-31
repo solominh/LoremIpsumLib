@@ -31,6 +31,15 @@ import java.util.Locale;
  */
 public class StringUtils {
 
+    /**
+     * Create a string that has same character
+     */
+    public static String repeat(char ch, int length) {
+        char[] charArray = new char[length];
+        Arrays.fill(charArray, ch);
+        return new String(charArray);
+    }
+
     public static boolean isNotNull(String string) {
         return !(string == null || string.trim().isEmpty() || "null".equals(string.toLowerCase(Locale.US)));
     }
