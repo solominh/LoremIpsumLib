@@ -2,6 +2,7 @@ package com.lorem_ipsum.models;
 
 import android.text.format.DateUtils;
 
+import com.lorem_ipsum.utils.ClockUtils;
 import com.lorem_ipsum.utils.DateTimeUtils;
 
 import java.text.SimpleDateFormat;
